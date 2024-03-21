@@ -1,0 +1,38 @@
+text,category
+listar processos,QUERY_TYPE
+quais processos,QUERY_TYPE
+informação processual,QUERY_TYPE
+disponibilidade de processos,QUERY_TYPE
+buscar processos,QUERY_TYPE
+quais os casos?,QUERY_TYPE
+detalhes do processo,QUERY_TYPE
+consultar processos,QUERY_TYPE
+listar casos,QUERY_TYPE
+quais processos estão disponíveis?,QUERY_TYPE
+informações sobre o processo,QUERY_TYPE
+disponibilidade de ações,QUERY_TYPE
+obter processos,QUERY_TYPE
+quais processos estão em andamento?,QUERY_TYPE
+informações do processo,QUERY_TYPE
+disponibilidade de casos,QUERY_TYPE
+criar alerta,ALERT_TYPE
+alerta,ALERT_TYPE
+quero criar alerta,ALERT_TYPE
+quero alerta,ALERT_TYPE
+criada aberta,ALERT_TYPE
+altos conclusos,AUTOS_CONCLUSOS
+autos conclusos,AUTOS_CONCLUSOS
+mostre os autos conclusos,AUTOS_CONCLUSOS
+quero ver autos conclusos,AUTOS_CONCLUSOS
+movimentação de autos conclusos,AUTOS_CONCLUSOS
+quero ver maria da penha,MARIA_DA_PENHA
+maria da penha,MARIA_DA_PENHA
+lei maria da penha,MARIA_DA_PENHA
+Bucar processo,QUERY_TYPE
+Consultar processo,QUERY_TYPE
+realizar consulta,QUERY_TYPE
+realizar busca,QUERY_TYPE
+altos conclusos,AUTOS_CONCLUSOS
+altos cônclusos,AUTOS_CONCLUSOS
+altoscúnculoso,AUTOS_CONCLUSOS
+não está,CHOOSING

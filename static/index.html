@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transcrição e Classificação de Sentenças</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            color: #333;
+            margin-top: 20px;
+        }
+        form {
+            background: white;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        label {
+            margin-top: 10px;
+            display: block;
+            color: #666;
+        }
+        input[type="file"],
+        input[type="text"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+        .response-container {
+            margin-top: 15px;
+            background-color: #eef;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .response-container h2 {
+            color: #007bff;
+        }
+
+        .response-content {
+            font-family: monospace;
+            color: #333;
+        }
+        .fetch-button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .fetch-button:hover {
+            background-color: #45a049;
+        }
+        
+    </style>
+</head>
+<body>
+        <h1>Métodos</h1>
+        <button class="fetch-button" onclick="fetchMethods()">Listar Métodos Disponíveis</button>
+
+        <div id="methodsResponse" class="response-container" style="display:none;">
+            <h2>Métodos Disponíveis:</h2>
+            <pre class="response-content"></pre>
+        </div>
+
+    <h1>Transcrição</h1>
+    <form id="formWav2Vec2" action="https://func-tj.serveo.net/transcription/wav2vec2" method="post" enctype="multipart/form-data" onsubmit="submitForm(event, 'formWav2Vec2', 'responseWav2Vec2')">
+        <label for="audio">WAV2VEC2:</label>
+        <input type="file" name="audio" accept=".ogg, .mp3"> 
+        <input type="submit" value="Enviar">
+    </form>
+
+    <div id="responseWav2Vec2" class="response-container" style="display:none;">
+        <h2>Resposta da Transcrição:</h2>
+        <pre class="response-content"></pre>
+    </div>
+    <form id="formWhisper" action="https://func-tj.serveo.net/transcription/whisper" method="post" enctype="multipart/form-data" onsubmit="submitForm(event, 'formWhisper', 'responseWhisper')">
+        <label for="audio">WHISPER:</label>
+        <input type="file" name="audio" accept=".ogg, .mp3"> 
+        <input type="submit" value="Enviar">
+    </form>
+    <div id="responseWhisper" class="response-container" style="display:none;">
+        <h2>Resposta da Transcrição:</h2>
+        <pre class="response-content"></pre>
+    </div>
+    <form id="formrawWav2Vec2"  action="https://func-tj.serveo.net/rawtranscription/wav2vec2" method="post" enctype="multipart/form-data"  onsubmit="submitForm(event, 'formrawWav2Vec2', 'responserawWav2Vec2')">
+        <label for="audio">RAW WAV2VEC2:</label>
+        <input type="file" name="audio" accept=".ogg, .mp3"> 
+        <input type="submit" value="Enviar">
+    </form>
+    <div id="responserawWav2Vec2" class="response-container" style="display:none;">
+        <h2>Resposta da Transcrição:</h2>
+        <pre class="response-content"></pre>
+    </div>
+    <form id="formrawWhisper" action="https://func-tj.serveo.net/rawtranscription/whisper" method="post" enctype="multipart/form-data" onsubmit="submitForm(event, 'formrawWhisper', 'responserawWhisper')">
+        <label for="audio">RAW WHISPER:</label>
+        <input type="file" name="audio" accept=".ogg, .mp3"> 
+        <input type="submit" value="Enviar">
+    </form>
+    <div id="responserawWhisper" class="response-container" style="display:none;">
+        <h2>Resposta da Transcrição:</h2>
+        <pre class="response-content"></pre>
+    </div>
+
+    <h1>Reconhecimento de intenção</h1>
+    <form id="formReconIten" action="https://func-tj.serveo.net/recon_intencao" method="post" onsubmit="submitForm2(event, 'formReconIten', 'responseReconAntigo' )">
+        <label for="text">Classificador faiss antigo:</label>
+        <input type="text" name="text" required>
+        <input type="submit" value="Enviar">
+    </form>
+    <div id="responseReconAntigo" class="response-container" style="display:none;">
+        <h2>Resposta da Classificação:</h2>
+        <pre class="response-content"></pre>
+    </div>
+
+    <form id="formReconQA" action="https://func-tj.serveo.net/recon_intencao/model_qa" method="post" onsubmit="submitForm2(event, 'formReconQA', 'responseReconQA')">
+        <label for="text">Reconhecedor de intenção QA:</label>
+        <input type="text" name="text" required>
+        <label for="question">Query:</label>
+        <input type="text" name="question" required>
+        <input type="submit" value="Enviar">
+    </form>
+    <div id="responseReconQA" class="response-container" style="display:none;">
+        <h2>Resposta da Classificação:</h2>
+        <pre class="response-content"></pre>
+    </div>
+
+
+    <form id="formReconZSC" action="https://func-tj.serveo.net/recon_intencao/model_zsc" method="post" onsubmit="submitForm2(event, 'formReconZSC', 'responseReconZSC')">
+        <label for="text">Reconhecedor de intenção ZSC::</label>
+        <input type="text" name="text" required>
+        <label for="question">Query:</label>
+        <input type="text" name="question" required>
+        <input type="submit" value="Enviar">
+    </form>
+    <div id="responseReconZSC" class="response-container" style="display:none;">
+        <h2>Resposta da Classificação:</h2>
+        <pre class="response-content"></pre>
+    </div>
+
+
+    <pre id="result"></pre>
+
+    <script>
+        async function submitForm(event, formId, responseId) {
+            event.preventDefault();
+            const form = document.getElementById(formId);
+            const url = form.action;
+            const responseContainer = document.getElementById(responseId);
+            const responseContent = responseContainer.querySelector('.response-content');
+
+            try {
+                const formData = new FormData(form);
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro na resposta do servidor');
+                }
+
+                const result = await response.json();
+                responseContent.textContent = JSON.stringify(result, null, 2);
+                responseContainer.style.display = 'block';
+            } catch (error) {
+                responseContent.textContent = 'Erro: ' + error.message;
+                responseContainer.style.display = 'block';
+            }
+        }
+    </script>
+    <script>
+        async function submitForm2(event, formId, responseId) {
+            event.preventDefault();
+            const form = document.getElementById(formId);
+            const url = form.action;
+            const formData = new FormData(form);
+            const json = Object.fromEntries(formData.entries());
+            const responseContainer = document.getElementById(responseId);
+            const responseContent = responseContainer.querySelector('.response-content');
+    
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(json)
+                });
+                console.log(response)
+                if (!response.ok) {
+                    throw new Error('Erro na resposta do servidor: ' + response.statusText);
+                }
+    
+                const result = await response.json();
+                responseContent.textContent = JSON.stringify(result, null, 2);
+                responseContainer.style.display = 'block';
+            } catch (error) {
+                responseContent.textContent = 'Erro: ' + error.message;
+                responseContainer.style.display = 'block';
+            }
+        }
+    </script>
+    <script>
+        async function fetchMethods() {
+            const url = 'https://func-tj.serveo.net/methods';
+            const responseContainer = document.getElementById('methodsResponse');
+            const responseContent = responseContainer.querySelector('.response-content');
+    
+            try {
+                const response = await fetch(url, { method: 'GET' });
+    
+                if (!response.ok) {
+                    throw new Error('Erro na resposta do servidor: ' + response.statusText);
+                }
+    
+                const result = await response.json();
+                responseContent.innerHTML = formatMethodsInfo(result);
+                responseContainer.style.display = 'block';
+            } catch (error) {
+                responseContent.textContent = 'Erro: ' + error.message;
+                responseContainer.style.display = 'block';
+            }
+        }
+    
+        function formatMethodsInfo(methodsInfo) {
+            let formattedHtml = '';
+            for (const [path, info] of Object.entries(methodsInfo)) {
+                formattedHtml += `<strong>Endpoint:</strong> ${path}<br>`;
+                formattedHtml += `<strong>Descrição:</strong> ${info.description}<br>`;
+                if (info.models) {
+                    formattedHtml += `<strong>Modelos:</strong><br>`;
+                    for (const [modelName, modelDesc] of Object.entries(info.models)) {
+                        formattedHtml += `&nbsp;&nbsp;&nbsp;${modelName}: ${modelDesc}<br>`;
+                    }
+                }
+                formattedHtml += `<strong>Método:</strong> ${info.method || 'POST'}<br>`;
+                formattedHtml += `<strong>Tipo de Conteúdo:</strong> ${info.content_type || 'N/A'}<br><br>`;
+            }
+            return formattedHtml;
+        }
+    </script>
+    
+</body>
+</html>
