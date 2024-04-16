@@ -18,7 +18,7 @@ pipe_zsc = pipeline('zero-shot-classification', model='facebook/bart-large-mnli'
 
 # Importações específicas de suas classes personalizadas
 from transcription_models.jonatasgrosman_wav2vec2 import jonatasgrosman_wav2vec2
-from transcription_models.pierreguillou_whisper import pierreguillou_whisper
+#from transcription_models.pierreguillou_whisper import pierreguillou_whisper
 from sentence_classification.faiss import TextClassifier
 from sentence_classification.recon_intencao import Recon_Itencao
 
@@ -28,7 +28,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Modelos de Transcrição
 wav2vec2 = jonatasgrosman_wav2vec2()
-whisper = pierreguillou_whisper()
+#whisper = pierreguillou_whisper()
 faiss = TextClassifier()
 
 # Classes Pydantic para validação de entrada
@@ -72,7 +72,8 @@ async def run_rawtranscription(model: str, url: str = Form(...)):
         tmp_file.write(response.content)
         tmp_file_path = tmp_file.name
     if model == "whisper":
-        output = whisper.raw_transcript(audio.file)
+        #output = whisper.raw_transcript(audio.file)
+        output = wav2vec2.raw_transcript(audio.file)
     else:  # wav2vec2
         output = wav2vec2.raw_transcript(audio.file)
     
@@ -85,7 +86,8 @@ def run_rawtranscription(model: str, audio: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="Modelo não suportado")
 
     if model == "whisper":
-        output = whisper.raw_transcript(audio.file)
+        #output = whisper.raw_transcript(audio.file)
+        output = wav2vec2.raw_transcript(audio.file)
     else:  # wav2vec2
         output = wav2vec2.raw_transcript(audio.file)
     
